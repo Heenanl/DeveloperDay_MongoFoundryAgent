@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Embedding Generator API",
+    "description": "Generates text embeddings using Voyage AI for semantic search and similarity comparisons.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api"
+    }
+  ],
+  "paths": {
+    "/embed": {
+      "post": {
+        "summary": "Generate a text embedding",
+        "operationId": "generateEmbedding",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text to generate embedding for"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful embedding generation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "description": "The generated embedding vector"
+                    },
+                    "dimensions": {
+                      "type": "integer",
+                      "description": "Number of dimensions in the embedding vector"
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "The model used to generate the embedding",
+                      "example": "voyage-3"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ A collection of deployable code samples demonstrating how to build intelligent a
 | [**Simple RAG on Movies**](./samples/simple-rag-movies/) | Semantic search over MongoDB movie data using vector embeddings and MCP | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Functions, MCP |
 | [**Multimodal Product Search**](./samples/multimodal-product-search/) | Visual product search using text, images, or both with multimodal embeddings | Azure AI Foundry, MongoDB Atlas Vector Search, Voyage AI, Azure Functions, MCP |
 | [**Voice Customer Support**](./samples/voice-customer-support/) | Voice-enabled logistics support agent with order tracking, policy search, and ticket creation | Azure AI Foundry, GPT Realtime API, MongoDB Atlas, Azure Functions, MCP |
+| [**Insurance Claim Agent**](./samples/insurance-claim-agent/) | Multi-agent insurance claim filing and assessment with image analysis and policy search | Azure AI Foundry, GPT-4o, Voyage AI, MongoDB Atlas Vector Search, Azure Functions, MCP |
 
 ## Common Prerequisites
 
@@ -61,6 +62,13 @@ mongodb-foundry-agent/
         ├── docs/                      # Agent instructions, OpenAPI specs
         ├── scripts/                   # Deployment scripts (Bash & PowerShell)
         └── sample-conversations.md    # Example voice conversations
+    └── insurance-claim-agent/         # Multi-agent insurance claim processing
+        ├── README.md                  # Full setup & deployment guide
+        ├── src/                       # Image analysis func, embedding func, data loader
+        ├── deploy/                    # Bicep & ARM templates
+        ├── docs/                      # Two agent instructions, OpenAPI specs
+        ├── scripts/                   # Deployment scripts (Bash & PowerShell)
+        └── sample-scenarios.md        # Example claim scenarios
 ```
 
 ## Contributing

@@ -1,0 +1,222 @@
+[
+  {
+    "_id": "CLM-20260505-001",
+    "policy_number": "POL-2024-78432",
+    "customer_name": "John Davis",
+    "customer_email": "john.davis@email.com",
+    "customer_phone": "+1-555-0201",
+    "accident_date": "2026-05-04",
+    "accident_location": "Interstate 90, Exit 45, Seattle WA",
+    "accident_description": "Rear-ended at a stoplight. Other driver was texting.",
+    "damage_description": "Significant rear bumper damage. Trunk lid bent upward. Both tail lights shattered. Exhaust pipe displaced. Paint scraped along passenger side quarter panel.",
+    "severity_estimate": "moderate",
+    "vehicles_involved": [
+      {"make": "Toyota", "model": "Camry", "year": 2023, "plate": "WA-ABC1234", "role": "insured"},
+      {"make": "Ford", "model": "F-150", "year": 2022, "plate": "WA-XYZ5678", "role": "other_party"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": "SPD-2026-45678",
+    "status": "filed",
+    "filed_at": "2026-05-05T10:30:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260503-002",
+    "policy_number": "POL-2024-31205",
+    "customer_name": "Maria Gonzalez",
+    "customer_email": "maria.gonzalez@email.com",
+    "customer_phone": "+1-555-0302",
+    "accident_date": "2026-05-02",
+    "accident_location": "Parking lot, Westfield Mall, 2501 Colorado Blvd, Denver CO",
+    "accident_description": "Vehicle was struck while parked in a shopping mall parking lot. Returned to find driver-side door dented and mirror broken. No note left by responsible party.",
+    "damage_description": "Large dent on driver-side front door. Side mirror housing cracked and mirror glass missing. Minor paint transfer on door panel.",
+    "severity_estimate": "minor",
+    "vehicles_involved": [
+      {"make": "Honda", "model": "Civic", "year": 2024, "plate": "CO-JKL9012", "role": "insured"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": null,
+    "status": "filed",
+    "filed_at": "2026-05-03T14:15:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260501-003",
+    "policy_number": "POL-2023-55987",
+    "customer_name": "Robert Chen",
+    "customer_email": "robert.chen@email.com",
+    "customer_phone": "+1-555-0403",
+    "accident_date": "2026-04-30",
+    "accident_location": "Intersection of Oak St and Main Ave, Portland OR",
+    "accident_description": "T-bone collision at a four-way intersection. Other driver ran a red light and struck the passenger side of my vehicle.",
+    "damage_description": "Severe passenger-side intrusion. Both passenger doors crushed inward. B-pillar visibly deformed. Side curtain airbags deployed. Passenger window shattered. Frame damage likely.",
+    "severity_estimate": "severe",
+    "vehicles_involved": [
+      {"make": "Subaru", "model": "Outback", "year": 2022, "plate": "OR-MNO3456", "role": "insured"},
+      {"make": "Chevrolet", "model": "Silverado", "year": 2023, "plate": "OR-PQR7890", "role": "other_party"}
+    ],
+    "injuries_reported": true,
+    "police_report_number": "PPD-2026-12345",
+    "status": "under_review",
+    "filed_at": "2026-05-01T08:45:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260428-004",
+    "policy_number": "POL-2024-92100",
+    "customer_name": "Sarah Thompson",
+    "customer_email": "sarah.thompson@email.com",
+    "customer_phone": "+1-555-0504",
+    "accident_date": "2026-04-27",
+    "accident_location": "Highway 101 Northbound, Mile Marker 232, San Jose CA",
+    "accident_description": "Hydroplaned during heavy rain and hit the center median barrier. Vehicle spun and came to rest on the shoulder.",
+    "damage_description": "Front bumper torn off. Hood crumpled. Radiator pushed back into engine bay. Both front airbags deployed. Front axle bent. Driver side fender crushed. Fluid leaking from engine compartment.",
+    "severity_estimate": "total_loss",
+    "vehicles_involved": [
+      {"make": "Nissan", "model": "Altima", "year": 2021, "plate": "CA-STU1234", "role": "insured"}
+    ],
+    "injuries_reported": true,
+    "police_report_number": "CHP-2026-67890",
+    "status": "assessed",
+    "filed_at": "2026-04-28T11:00:00Z",
+    "assessment": {
+      "assessed_at": "2026-05-02T09:30:00Z",
+      "assessor": "James Rivera",
+      "estimated_repair_cost": 28500,
+      "vehicle_value": 22000,
+      "recommendation": "total_loss",
+      "notes": "Repair cost exceeds vehicle value. Structural frame damage confirmed. Vehicle declared total loss."
+    }
+  },
+  {
+    "_id": "CLM-20260502-005",
+    "policy_number": "POL-2025-10044",
+    "customer_name": "David Kim",
+    "customer_email": "david.kim@email.com",
+    "customer_phone": "+1-555-0605",
+    "accident_date": "2026-05-01",
+    "accident_location": "Elm Street near 4th Ave, Austin TX",
+    "accident_description": "Sideswiped by a delivery truck that was merging without checking blind spot. Truck driver acknowledged fault.",
+    "damage_description": "Long scrape along entire driver side from front fender to rear quarter panel. Driver-side mirror knocked off. Front fender pushed in slightly.",
+    "severity_estimate": "moderate",
+    "vehicles_involved": [
+      {"make": "BMW", "model": "3 Series", "year": 2024, "plate": "TX-VWX5678", "role": "insured"},
+      {"make": "Freightliner", "model": "M2 106", "year": 2020, "plate": "TX-COM9012", "role": "other_party"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": "APD-2026-33456",
+    "status": "under_review",
+    "filed_at": "2026-05-02T16:20:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260504-006",
+    "policy_number": "POL-2024-67321",
+    "customer_name": "Emily Watson",
+    "customer_email": "emily.watson@email.com",
+    "customer_phone": "+1-555-0706",
+    "accident_date": "2026-05-03",
+    "accident_location": "Garage entrance, 450 Park Ave, New York NY",
+    "accident_description": "Scraped the passenger side against a concrete pillar while entering a narrow parking garage. Low speed impact.",
+    "damage_description": "Deep scrape along passenger-side doors. Paint removed down to bare metal in several spots. Minor dent on rear passenger door. Side trim strip torn.",
+    "severity_estimate": "minor",
+    "vehicles_involved": [
+      {"make": "Mercedes-Benz", "model": "C-Class", "year": 2025, "plate": "NY-DEF3456", "role": "insured"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": null,
+    "status": "filed",
+    "filed_at": "2026-05-04T09:10:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260429-007",
+    "policy_number": "POL-2023-44892",
+    "customer_name": "Michael Brown",
+    "customer_email": "michael.brown@email.com",
+    "customer_phone": "+1-555-0807",
+    "accident_date": "2026-04-28",
+    "accident_location": "Route 66, 12 miles east of Flagstaff AZ",
+    "accident_description": "Deer jumped onto the road at dusk. Swerved to avoid but clipped the animal. Vehicle went off road into a ditch.",
+    "damage_description": "Front-right fender crumpled. Headlight assembly destroyed. Right-side of bumper hanging loose. Windshield cracked from impact. Possible suspension damage on front-right. Undercarriage scraping noted.",
+    "severity_estimate": "severe",
+    "vehicles_involved": [
+      {"make": "Jeep", "model": "Grand Cherokee", "year": 2023, "plate": "AZ-GHI7890", "role": "insured"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": "CCSO-2026-78901",
+    "status": "under_review",
+    "filed_at": "2026-04-29T07:30:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260505-008",
+    "policy_number": "POL-2025-28776",
+    "customer_name": "Lisa Patel",
+    "customer_email": "lisa.patel@email.com",
+    "customer_phone": "+1-555-0908",
+    "accident_date": "2026-05-04",
+    "accident_location": "I-285, Northbound near exit 12, Atlanta GA",
+    "accident_description": "Multi-vehicle pileup on the interstate during foggy conditions. Rear-ended by one vehicle, then pushed into the vehicle ahead.",
+    "damage_description": "Front and rear bumpers crushed. Hood buckled. Trunk crumpled and unable to open. Both headlights and tail lights broken. Radiator leaking. Rear axle possibly bent. Multiple airbags deployed.",
+    "severity_estimate": "severe",
+    "vehicles_involved": [
+      {"make": "Hyundai", "model": "Sonata", "year": 2024, "plate": "GA-JKL2345", "role": "insured"},
+      {"make": "Dodge", "model": "Ram 1500", "year": 2023, "plate": "GA-MNO6789", "role": "other_party"},
+      {"make": "Kia", "model": "Sportage", "year": 2025, "plate": "GA-PQR0123", "role": "other_party"}
+    ],
+    "injuries_reported": true,
+    "police_report_number": "GSP-2026-56789",
+    "status": "filed",
+    "filed_at": "2026-05-05T13:45:00Z",
+    "assessment": null
+  },
+  {
+    "_id": "CLM-20260430-009",
+    "policy_number": "POL-2024-83215",
+    "customer_name": "James Wilson",
+    "customer_email": "james.wilson@email.com",
+    "customer_phone": "+1-555-1009",
+    "accident_date": "2026-04-29",
+    "accident_location": "Maple Drive and Cedar Lane, Naperville IL",
+    "accident_description": "Backed out of driveway and collided with a neighbor's parked car across the street.",
+    "damage_description": "Rear bumper dented and cracked on insured vehicle. Minor scratch on neighbor's front bumper. Insured vehicle reverse sensor housing broken.",
+    "severity_estimate": "minor",
+    "vehicles_involved": [
+      {"make": "Volkswagen", "model": "Tiguan", "year": 2024, "plate": "IL-STU4567", "role": "insured"},
+      {"make": "Toyota", "model": "RAV4", "year": 2023, "plate": "IL-VWX8901", "role": "other_party"}
+    ],
+    "injuries_reported": false,
+    "police_report_number": null,
+    "status": "assessed",
+    "filed_at": "2026-04-30T17:00:00Z",
+    "assessment": {
+      "assessed_at": "2026-05-03T14:00:00Z",
+      "assessor": "Karen Mitchell",
+      "estimated_repair_cost": 1850,
+      "vehicle_value": 32000,
+      "recommendation": "repair",
+      "notes": "Minor cosmetic damage only. Bumper replacement and sensor housing repair recommended. No structural damage."
+    }
+  },
+  {
+    "_id": "CLM-20260505-010",
+    "policy_number": "POL-2025-19503",
+    "customer_name": "Amanda Foster",
+    "customer_email": "amanda.foster@email.com",
+    "customer_phone": "+1-555-1110",
+    "accident_date": "2026-05-05",
+    "accident_location": "Warehouse District, 800 Commerce St, Dallas TX",
+    "accident_description": "Large piece of debris fell from an overpass construction zone onto the vehicle while driving underneath. No other vehicles involved.",
+    "damage_description": "Roof severely dented with two puncture points. Windshield completely shattered. Sunroof glass broken inward. Headliner torn. A-pillar cover cracked on driver side.",
+    "severity_estimate": "moderate",
+    "vehicles_involved": [
+      {"make": "Tesla", "model": "Model 3", "year": 2025, "plate": "TX-YZA2345", "role": "insured"}
+    ],
+    "injuries_reported": true,
+    "police_report_number": "DPD-2026-90123",
+    "status": "filed",
+    "filed_at": "2026-05-05T18:00:00Z",
+    "assessment": null
+  }
+]

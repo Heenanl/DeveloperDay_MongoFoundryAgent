@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Image Analysis API",
+    "description": "Analyzes accident and damage photos using GPT-4o to assess vehicle damage severity and provide detailed descriptions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api"
+    }
+  ],
+  "paths": {
+    "/analyze-image": {
+      "post": {
+        "summary": "Analyze an image for damage assessment",
+        "operationId": "analyzeImage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["image"],
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "description": "Base64-encoded image data"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Optional custom analysis prompt",
+                    "default": "Analyze this vehicle damage photo and provide a detailed description of the damage, including the severity and affected areas."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful image analysis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Detailed description of the damage observed in the image"
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "The model used for analysis",
+                      "example": "gpt-4o"
+                    },
+                    "severity_estimate": {
+                      "type": "string",
+                      "description": "Estimated severity of the damage",
+                      "enum": ["minor", "moderate", "severe", "total_loss"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
