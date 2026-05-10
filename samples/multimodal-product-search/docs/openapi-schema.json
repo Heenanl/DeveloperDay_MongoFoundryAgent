@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Multimodal Embedding API",
+    "description": "Generate text, image, or combined text+image embeddings using Voyage AI voyage-multimodal-3 model for vector search operations.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api",
+      "description": "Azure Function App endpoint"
+    }
+  ],
+  "paths": {
+    "/embed-multimodal": {
+      "post": {
+        "operationId": "generateMultimodalEmbedding",
+        "summary": "Generate embedding vector for text, image, or both",
+        "description": "Takes a text string, a base64-encoded image, or both, and returns an embedding vector suitable for MongoDB vector search. Use text for describing what you're looking for. Use image when the user provides a product image to find similar items.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text to generate an embedding for (e.g., product description or search query)",
+                    "example": "red leather handbag with gold buckle"
+                  },
+                  "image": {
+                    "type": "string",
+                    "description": "Base64-encoded image to generate an embedding for. Do not include the data URL prefix.",
+                    "example": "/9j/4AAQSkZJRg..."
+                  }
+                },
+                "minProperties": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Embedding generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "description": "Embedding vector"
+                    },
+                    "dimensions": {
+                      "type": "integer",
+                      "description": "Number of dimensions in the embedding",
+                      "example": 1024
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "Model used to generate the embedding",
+                      "example": "voyage-multimodal-3"
+                    },
+                    "input_type": {
+                      "type": "string",
+                      "enum": ["text", "image", "multimodal"],
+                      "description": "Type of input used for embedding generation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - at least one of 'text' or 'image' is required"
+          },
+          "500": {
+            "description": "Server error - embedding generation failed"
+          }
+        }
+      }
+    }
+  }
+}

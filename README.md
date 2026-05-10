@@ -7,6 +7,7 @@ A collection of deployable code samples demonstrating how to build intelligent a
 | Sample | Description | Key Technologies |
 |--------|-------------|------------------|
 | [**Simple RAG on Movies**](./samples/simple-rag-movies/) | Semantic search over MongoDB movie data using vector embeddings and MCP | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Functions, MCP |
+| [**Multimodal Product Search**](./samples/multimodal-product-search/) | Visual product search using text, images, or both with multimodal embeddings | Azure AI Foundry, MongoDB Atlas Vector Search, Voyage AI, Azure Functions, MCP |
 
 ## Common Prerequisites
 
@@ -38,11 +39,18 @@ mongodb-foundry-agent/
 ├── SECURITY.md
 ├── .gitignore
 └── samples/
-    └── simple-rag-movies/             # Semantic search agent over movies
+    ├── simple-rag-movies/             # Semantic search agent over movies
+    │   ├── README.md                  # Full setup & deployment guide
+    │   ├── src/                       # Source code (Azure Function)
+    │   ├── deploy/                    # Bicep & ARM templates
+    │   ├── docs/                      # Architecture, agent instructions, OpenAPI spec
+    │   ├── scripts/                   # Deployment scripts (Bash & PowerShell)
+    │   └── sample-queries.md          # Example queries to test the agent
+    └── multimodal-product-search/     # Visual product search with images
         ├── README.md                  # Full setup & deployment guide
-        ├── src/                       # Source code (Azure Function)
+        ├── src/                       # Embedding function + data loader
         ├── deploy/                    # Bicep & ARM templates
-        ├── docs/                      # Architecture, agent instructions, OpenAPI spec
+        ├── docs/                      # Agent instructions, OpenAPI spec
         ├── scripts/                   # Deployment scripts (Bash & PowerShell)
         └── sample-queries.md          # Example queries to test the agent
 ```
