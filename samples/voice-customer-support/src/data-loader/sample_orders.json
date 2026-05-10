@@ -1,0 +1,375 @@
+[
+  {
+    "_id": "ORD-2024-1001",
+    "customer_name": "Jane Smith",
+    "customer_email": "jane.smith@email.com",
+    "customer_phone": "+1-555-0101",
+    "items": [
+      {"name": "Wireless Headphones", "qty": 1, "price": 79.99}
+    ],
+    "status": "delivered",
+    "shipping_address": "123 Main St, Seattle, WA 98101",
+    "tracking_number": "1Z999AA10123456784",
+    "carrier": "UPS",
+    "estimated_delivery": "2026-05-12",
+    "actual_delivery": "2026-05-11",
+    "order_date": "2026-05-05",
+    "total": 87.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1002",
+    "customer_name": "Marcus Johnson",
+    "customer_email": "marcus.j@email.com",
+    "customer_phone": "+1-555-0102",
+    "items": [
+      {"name": "Running Shoes - Size 10", "qty": 1, "price": 129.99},
+      {"name": "Athletic Socks 3-Pack", "qty": 2, "price": 14.99}
+    ],
+    "status": "delivered",
+    "shipping_address": "456 Oak Ave, Portland, OR 97201",
+    "tracking_number": "9400111899223100012345",
+    "carrier": "USPS",
+    "estimated_delivery": "2026-05-10",
+    "actual_delivery": "2026-05-10",
+    "order_date": "2026-05-03",
+    "total": 167.97,
+    "payment_method": "debit_card"
+  },
+  {
+    "_id": "ORD-2024-1003",
+    "customer_name": "Emily Chen",
+    "customer_email": "emily.chen@email.com",
+    "customer_phone": "+1-555-0103",
+    "items": [
+      {"name": "Stainless Steel Water Bottle", "qty": 2, "price": 24.99},
+      {"name": "Insulated Lunch Bag", "qty": 1, "price": 34.99}
+    ],
+    "status": "delivered",
+    "shipping_address": "789 Pine Rd, San Francisco, CA 94102",
+    "tracking_number": "7489012345678901234567",
+    "carrier": "FedEx",
+    "estimated_delivery": "2026-04-28",
+    "actual_delivery": "2026-04-27",
+    "order_date": "2026-04-22",
+    "total": 92.97,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1004",
+    "customer_name": "David Park",
+    "customer_email": "david.park@email.com",
+    "customer_phone": "+1-555-0104",
+    "items": [
+      {"name": "Bluetooth Speaker", "qty": 1, "price": 59.99}
+    ],
+    "status": "delivered",
+    "shipping_address": "321 Elm St, Austin, TX 73301",
+    "tracking_number": "1Z999BB20234567890",
+    "carrier": "UPS",
+    "estimated_delivery": "2026-04-20",
+    "actual_delivery": "2026-04-19",
+    "order_date": "2026-04-14",
+    "total": 65.99,
+    "payment_method": "paypal"
+  },
+  {
+    "_id": "ORD-2024-1005",
+    "customer_name": "Sarah Williams",
+    "customer_email": "sarah.w@email.com",
+    "customer_phone": "+1-555-0105",
+    "items": [
+      {"name": "Yoga Mat - Purple", "qty": 1, "price": 39.99},
+      {"name": "Resistance Bands Set", "qty": 1, "price": 19.99},
+      {"name": "Foam Roller", "qty": 1, "price": 29.99}
+    ],
+    "status": "delivered",
+    "shipping_address": "654 Maple Dr, Denver, CO 80201",
+    "tracking_number": "4201234567890123456789",
+    "carrier": "DHL",
+    "estimated_delivery": "2026-05-08",
+    "actual_delivery": "2026-05-07",
+    "order_date": "2026-05-01",
+    "total": 97.97,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1006",
+    "customer_name": "Michael Torres",
+    "customer_email": "m.torres@email.com",
+    "customer_phone": "+1-555-0106",
+    "items": [
+      {"name": "Laptop Stand - Adjustable", "qty": 1, "price": 49.99},
+      {"name": "USB-C Hub 7-in-1", "qty": 1, "price": 39.99}
+    ],
+    "status": "in_transit",
+    "shipping_address": "987 Cedar Ln, Chicago, IL 60601",
+    "tracking_number": "1Z999CC30345678901",
+    "carrier": "UPS",
+    "estimated_delivery": "2026-05-15",
+    "actual_delivery": null,
+    "order_date": "2026-05-09",
+    "total": 97.98,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1007",
+    "customer_name": "Amanda Lee",
+    "customer_email": "amanda.lee@email.com",
+    "customer_phone": "+1-555-0107",
+    "items": [
+      {"name": "Ceramic Coffee Mug Set (4)", "qty": 1, "price": 44.99}
+    ],
+    "status": "in_transit",
+    "shipping_address": "246 Birch Way, Nashville, TN 37201",
+    "tracking_number": "9261290100130428205028",
+    "carrier": "USPS",
+    "estimated_delivery": "2026-05-14",
+    "actual_delivery": null,
+    "order_date": "2026-05-08",
+    "total": 49.99,
+    "payment_method": "debit_card"
+  },
+  {
+    "_id": "ORD-2024-1008",
+    "customer_name": "Robert Kim",
+    "customer_email": "r.kim@email.com",
+    "customer_phone": "+1-555-0108",
+    "items": [
+      {"name": "Smart Watch - Black", "qty": 1, "price": 249.99}
+    ],
+    "status": "in_transit",
+    "shipping_address": "135 Walnut St, Boston, MA 02101",
+    "tracking_number": "7489098765432109876543",
+    "carrier": "FedEx",
+    "estimated_delivery": "2026-05-13",
+    "actual_delivery": null,
+    "order_date": "2026-05-07",
+    "total": 274.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1009",
+    "customer_name": "Lisa Patel",
+    "customer_email": "lisa.patel@email.com",
+    "customer_phone": "+1-555-0109",
+    "items": [
+      {"name": "Cotton Throw Blanket", "qty": 1, "price": 54.99},
+      {"name": "Scented Candle - Lavender", "qty": 2, "price": 18.99}
+    ],
+    "status": "in_transit",
+    "shipping_address": "852 Spruce Ave, Miami, FL 33101",
+    "tracking_number": "4207654321098765432101",
+    "carrier": "DHL",
+    "estimated_delivery": "2026-05-16",
+    "actual_delivery": null,
+    "order_date": "2026-05-10",
+    "total": 100.97,
+    "payment_method": "paypal"
+  },
+  {
+    "_id": "ORD-2024-1010",
+    "customer_name": "Chris Anderson",
+    "customer_email": "c.anderson@email.com",
+    "customer_phone": "+1-555-0110",
+    "items": [
+      {"name": "Mechanical Keyboard - RGB", "qty": 1, "price": 89.99},
+      {"name": "Mouse Pad XL", "qty": 1, "price": 19.99}
+    ],
+    "status": "in_transit",
+    "shipping_address": "741 Ash Blvd, Phoenix, AZ 85001",
+    "tracking_number": "1Z999DD40456789012",
+    "carrier": "UPS",
+    "estimated_delivery": "2026-05-17",
+    "actual_delivery": null,
+    "order_date": "2026-05-11",
+    "total": 117.98,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1011",
+    "customer_name": "Nina Rodriguez",
+    "customer_email": "nina.r@email.com",
+    "customer_phone": "+1-555-0111",
+    "items": [
+      {"name": "Wireless Earbuds - White", "qty": 1, "price": 149.99}
+    ],
+    "status": "processing",
+    "shipping_address": "369 Poplar Ct, San Diego, CA 92101",
+    "tracking_number": null,
+    "carrier": null,
+    "estimated_delivery": "2026-05-20",
+    "actual_delivery": null,
+    "order_date": "2026-05-12",
+    "total": 164.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1012",
+    "customer_name": "Tom Nakamura",
+    "customer_email": "tom.n@email.com",
+    "customer_phone": "+1-555-0112",
+    "items": [
+      {"name": "Backpack - Waterproof", "qty": 1, "price": 79.99},
+      {"name": "Travel Organizer Pouches", "qty": 1, "price": 22.99},
+      {"name": "Portable Charger 20000mAh", "qty": 1, "price": 34.99}
+    ],
+    "status": "processing",
+    "shipping_address": "258 Willow Rd, Minneapolis, MN 55401",
+    "tracking_number": null,
+    "carrier": null,
+    "estimated_delivery": "2026-05-21",
+    "actual_delivery": null,
+    "order_date": "2026-05-12",
+    "total": 150.97,
+    "payment_method": "debit_card"
+  },
+  {
+    "_id": "ORD-2024-1013",
+    "customer_name": "Jessica Brown",
+    "customer_email": "j.brown@email.com",
+    "customer_phone": "+1-555-0113",
+    "items": [
+      {"name": "Desk Lamp - LED", "qty": 1, "price": 42.99}
+    ],
+    "status": "processing",
+    "shipping_address": "147 Chestnut St, Philadelphia, PA 19101",
+    "tracking_number": null,
+    "carrier": null,
+    "estimated_delivery": "2026-05-22",
+    "actual_delivery": null,
+    "order_date": "2026-05-13",
+    "total": 47.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1014",
+    "customer_name": "Brian O'Sullivan",
+    "customer_email": "brian.os@email.com",
+    "customer_phone": "+1-555-0114",
+    "items": [
+      {"name": "Winter Jacket - Large", "qty": 1, "price": 189.99}
+    ],
+    "status": "shipped",
+    "shipping_address": "963 Hickory Ln, Detroit, MI 48201",
+    "tracking_number": "9400111899223100098765",
+    "carrier": "USPS",
+    "estimated_delivery": "2026-05-16",
+    "actual_delivery": null,
+    "order_date": "2026-05-09",
+    "total": 207.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1015",
+    "customer_name": "Rachel Green",
+    "customer_email": "rachel.g@email.com",
+    "customer_phone": "+1-555-0115",
+    "items": [
+      {"name": "Silk Pillowcase Set", "qty": 2, "price": 34.99},
+      {"name": "Bamboo Sheet Set - Queen", "qty": 1, "price": 89.99}
+    ],
+    "status": "shipped",
+    "shipping_address": "582 Sycamore Dr, Charlotte, NC 28201",
+    "tracking_number": "7489055512345098712345",
+    "carrier": "FedEx",
+    "estimated_delivery": "2026-05-15",
+    "actual_delivery": null,
+    "order_date": "2026-05-08",
+    "total": 167.97,
+    "payment_method": "paypal"
+  },
+  {
+    "_id": "ORD-2024-1016",
+    "customer_name": "Kevin Wright",
+    "customer_email": "k.wright@email.com",
+    "customer_phone": "+1-555-0116",
+    "items": [
+      {"name": "Cast Iron Skillet 12-inch", "qty": 1, "price": 44.99},
+      {"name": "Silicone Spatula Set", "qty": 1, "price": 15.99}
+    ],
+    "status": "shipped",
+    "shipping_address": "417 Magnolia Blvd, Atlanta, GA 30301",
+    "tracking_number": "4209876543210123456789",
+    "carrier": "DHL",
+    "estimated_delivery": "2026-05-18",
+    "actual_delivery": null,
+    "order_date": "2026-05-10",
+    "total": 67.98,
+    "payment_method": "debit_card"
+  },
+  {
+    "_id": "ORD-2024-1017",
+    "customer_name": "Sophie Martinez",
+    "customer_email": "sophie.m@email.com",
+    "customer_phone": "+1-555-0117",
+    "items": [
+      {"name": "Noise Cancelling Headphones", "qty": 1, "price": 299.99}
+    ],
+    "status": "cancelled",
+    "shipping_address": "291 Cypress Way, Las Vegas, NV 89101",
+    "tracking_number": null,
+    "carrier": null,
+    "estimated_delivery": null,
+    "actual_delivery": null,
+    "order_date": "2026-05-06",
+    "total": 329.99,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1018",
+    "customer_name": "Daniel Hughes",
+    "customer_email": "d.hughes@email.com",
+    "customer_phone": "+1-555-0118",
+    "items": [
+      {"name": "Electric Kettle - 1.7L", "qty": 1, "price": 39.99},
+      {"name": "Tea Sampler Box", "qty": 1, "price": 24.99}
+    ],
+    "status": "cancelled",
+    "shipping_address": "804 Juniper Rd, Columbus, OH 43201",
+    "tracking_number": null,
+    "carrier": null,
+    "estimated_delivery": null,
+    "actual_delivery": null,
+    "order_date": "2026-04-30",
+    "total": 72.98,
+    "payment_method": "credit_card"
+  },
+  {
+    "_id": "ORD-2024-1019",
+    "customer_name": "Olivia Taylor",
+    "customer_email": "olivia.t@email.com",
+    "customer_phone": "+1-555-0119",
+    "items": [
+      {"name": "Fleece Hoodie - Medium", "qty": 1, "price": 64.99}
+    ],
+    "status": "returned",
+    "shipping_address": "673 Redwood Ct, San Jose, CA 95101",
+    "tracking_number": "1Z999EE50567890123",
+    "carrier": "UPS",
+    "estimated_delivery": "2026-04-25",
+    "actual_delivery": "2026-04-24",
+    "order_date": "2026-04-18",
+    "total": 71.99,
+    "payment_method": "debit_card"
+  },
+  {
+    "_id": "ORD-2024-1020",
+    "customer_name": "James Wilson",
+    "customer_email": "james.w@email.com",
+    "customer_phone": "+1-555-0120",
+    "items": [
+      {"name": "Portable Projector", "qty": 1, "price": 199.99},
+      {"name": "HDMI Cable 6ft", "qty": 1, "price": 9.99}
+    ],
+    "status": "returned",
+    "shipping_address": "519 Aspen Blvd, Salt Lake City, UT 84101",
+    "tracking_number": "7489033344455566677788",
+    "carrier": "FedEx",
+    "estimated_delivery": "2026-04-22",
+    "actual_delivery": "2026-04-22",
+    "order_date": "2026-04-15",
+    "total": 230.98,
+    "payment_method": "credit_card"
+  }
+]

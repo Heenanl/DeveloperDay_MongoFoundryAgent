@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SwiftShip Embedding Generator",
+    "description": "Azure Function that generates text embeddings using Azure OpenAI text-embedding-3-small. Used by the voice support agent to perform vector search on policy documents.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api",
+      "description": "Azure Functions endpoint (replace YOUR_FUNCTION_APP with your app name)"
+    }
+  ],
+  "paths": {
+    "/embed": {
+      "post": {
+        "operationId": "generateEmbedding",
+        "summary": "Generate a text embedding",
+        "description": "Takes a text string and returns a 1536-dimension embedding vector using Azure OpenAI text-embedding-3-small.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The text to embed",
+                    "example": "What is the refund policy for damaged items?"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Embedding generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "embedding": {
+                      "type": "array",
+                      "items": { "type": "number" },
+                      "description": "The embedding vector"
+                    },
+                    "dimensions": {
+                      "type": "integer",
+                      "example": 1536,
+                      "description": "Number of dimensions in the embedding"
+                    },
+                    "model": {
+                      "type": "string",
+                      "example": "text-embedding-3-small",
+                      "description": "The model used to generate the embedding"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request – missing or invalid text field",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}

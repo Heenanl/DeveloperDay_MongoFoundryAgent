@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwiftShip Voice Support Agent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎙️ SwiftShip Voice Support</h1>
+      <p class="subtitle">AI-powered logistics support agent</p>
+    </header>
+
+    <!-- Connection Settings -->
+    <div id="connection-panel" class="panel">
+      <h2>Connection Settings</h2>
+      <div class="form-group">
+        <label for="endpoint">Azure OpenAI Endpoint</label>
+        <input
+          type="text"
+          id="endpoint"
+          placeholder="your-resource.openai.azure.com"
+        />
+      </div>
+      <div class="form-group">
+        <label for="deployment">Deployment Name</label>
+        <input type="text" id="deployment" placeholder="gpt-4o-realtime-preview" />
+      </div>
+      <div class="form-group">
+        <label for="api-key">API Key</label>
+        <input type="password" id="api-key" placeholder="••••••••••••••••" />
+      </div>
+      <button id="connect-btn" class="btn btn-primary">Connect</button>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar" class="status-bar">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Idle</span>
+    </div>
+
+    <!-- Chat Transcript -->
+    <div id="transcript" class="transcript">
+      <div class="transcript-placeholder">
+        Connect and tap the mic to start a conversation.
+      </div>
+    </div>
+
+    <!-- Mic Button -->
+    <div class="mic-wrapper">
+      <button id="mic-btn" class="mic-btn" disabled>
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+          <path
+            d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.93V21h2v-3.07A7 7 0 0 0 19 11h-2z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

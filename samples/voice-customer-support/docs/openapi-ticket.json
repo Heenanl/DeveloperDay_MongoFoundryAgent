@@ -1,0 +1,196 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SwiftShip Ticket Creator",
+    "description": "Azure Function that creates and retrieves support tickets in the SwiftShip MongoDB database. Used by the voice support agent to escalate unresolved customer issues.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api",
+      "description": "Azure Functions endpoint (replace YOUR_FUNCTION_APP with your app name)"
+    }
+  ],
+  "paths": {
+    "/ticket": {
+      "post": {
+        "operationId": "createTicket",
+        "summary": "Create a support ticket",
+        "description": "Creates a new support ticket in the swiftship.tickets collection and returns the generated ticket ID.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ticket created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request – missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ticket/{ticket_id}": {
+      "get": {
+        "operationId": "getTicket",
+        "summary": "Get a ticket by ID",
+        "description": "Retrieves the full ticket document from the swiftship.tickets collection.",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "TKT-123456"
+            },
+            "description": "The ticket ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ticket found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ticket not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateTicketRequest": {
+        "type": "object",
+        "required": ["order_id", "customer_name", "issue_type", "description"],
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "The related order ID",
+            "example": "ORD-1234"
+          },
+          "customer_name": {
+            "type": "string",
+            "description": "Customer full name",
+            "example": "Alex Johnson"
+          },
+          "issue_type": {
+            "type": "string",
+            "enum": ["damaged_item", "cancellation", "refund", "lost_package", "general"],
+            "description": "Category of the issue"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief description of the issue",
+            "example": "Customer received a damaged wireless headphone set"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "default": "medium",
+            "description": "Ticket priority level"
+          }
+        }
+      },
+      "Ticket": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "description": "Unique ticket identifier",
+            "example": "TKT-123456"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["open", "in_progress", "resolved", "closed"],
+            "description": "Current ticket status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the ticket was created"
+          },
+          "order_id": {
+            "type": "string"
+          },
+          "customer_name": {
+            "type": "string"
+          },
+          "issue_type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}
