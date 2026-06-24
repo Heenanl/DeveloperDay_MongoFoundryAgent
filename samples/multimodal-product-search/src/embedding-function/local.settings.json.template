@@ -1,9 +1,0 @@
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "python",
-    "VOYAGE_API_KEY": "pa-YOUR_VOYAGE_API_KEY",
-    "VOYAGE_MODEL": "voyage-multimodal-3"
-  }
-}
