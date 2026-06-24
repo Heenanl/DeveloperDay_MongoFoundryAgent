@@ -58,7 +58,6 @@ htmlcov/
 # Build artifacts
 *.zip
 
-# Eval outputs
-samples/simple-rag-movies/evals/eval-results.json
-samples/simple-rag-movies/evals/dataset.jsonl
-samples/simple-rag-movies/evals/.venv-eval/
+# Eval artifacts (local venv / generated files)
+samples/simple-rag-movies/evals/.venv*/
+samples/simple-rag-movies/evals/*.jsonl

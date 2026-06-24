@@ -1,11 +1,19 @@
 # 🧪 Agent Evaluation — simple-rag-movies
 
-Offline evaluation for the **simple-rag-movies** Foundry agent using the
-[microsoft/ai-agent-evals](https://github.com/microsoft/ai-agent-evals) GitHub Action.
+Code-based, **portal-visible** evaluation for the **simple-rag-movies** Foundry agent.
 
-The action invokes your agent with a set of test queries, runs Foundry evaluators
-(model-as-judge + safety + metrics), and posts a summary report to the GitHub
-Actions run. When you pass two agent versions it produces a statistical comparison.
+[`run_eval_cloud.py`](run_eval_cloud.py) submits an evaluation to your Foundry project
+using the OpenAI-compatible **Evals API** (via `azure-ai-projects`). The agent is
+invoked **server-side** for each test query, the responses are graded by Foundry
+evaluators, and the run shows up natively under **Build → Evaluations** in the
+[Foundry portal](https://ai.azure.com) — with tables, charts, and per-row drill-down.
+
+The headline metric is **`tool_call_accuracy`**: because this agent's whole purpose is to
+**query MongoDB**, the eval verifies the agent actually *called the database tools* — not just
+that the answer reads well. See [How `tool_call_accuracy` works](#️-how-tool_call_accuracy-works-and-why-tool_definitions-is-required) below.
+
+Based on the official sample:
+[Azure/azure-sdk-for-python — sample_agent_evaluation.py](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/evaluations/sample_agent_evaluation.py)
 
 ---
 
@@ -13,205 +21,143 @@ Actions run. When you pass two agent versions it produces a statistical comparis
 
 ```
 samples/simple-rag-movies/evals/
-├── dataset.json        # Full eval set (structured, semantic, and "no-hallucination" cases)
-├── dataset-tiny.json   # Minimal 3-query smoke test
-├── run_eval_local.py   # Local (SDK) evaluation runner — use when CI can't reach private storage
-├── requirements.txt    # Python deps for the local runner
+├── run_eval_cloud.py   # Submits a portal-visible eval run; also holds the static TOOL_DEFINITIONS
+├── dataset.json        # Test queries (structured, aggregation, semantic, no-hallucination)
+├── requirements.txt    # Python dependencies
 └── README.md           # This file
-
-.github/workflows/
-└── simple-rag-movies-eval.yml   # CI workflow that runs the action
 ```
-
-> **Two ways to run:**
-> 1. **CI (GitHub Action)** — fully automated, but requires the Foundry project storage to be reachable from the GitHub-hosted runner. If the project uses a **private storage account** (public network disabled), the action's data upload fails with `AuthorizationFailure`. Use the local runner instead.
-> 2. **Local (SDK)** — `run_eval_local.py` invokes the agent and scores responses **in-process** on your machine, avoiding the project storage entirely. Recommended for private-agent projects.
 
 ---
 
 ## 🧩 What the dataset tests
 
-The dataset is designed around the agent's two routing paths plus a guardrail check:
+The dataset exercises the agent's three routing paths plus a guardrail check:
 
 | Category | Example query | What good looks like |
 |----------|---------------|----------------------|
-| Structured (find) | "Show me movies from 1994" | Calls the find tool, returns catalog data |
-| Aggregation | "Top 10 highest rated sci-fi movies" | Calls the aggregate tool (sort + limit) |
-| Semantic (vector) | "Find movies about hope and redemption" | Generates an embedding, then vector search |
+| Structured (find) | "Show me movies from 1994" | Calls the `find` tool, returns catalog data |
+| Aggregation | "Top 10 highest rated sci-fi movies" | Calls the `aggregate` tool (sort + limit) |
+| Semantic (vector) | "Find movies about hope and redemption" | Calls `EmbeddingGenerator`, then `aggregate` with `$vectorSearch` |
 | No-hallucination | "Show me movies from 1850" | Reports no results, does NOT invent titles |
 
-Evaluators used (from the Foundry evaluator catalog):
+Evaluators applied (from the Foundry evaluator catalog):
 
-- `builtin.intent_resolution` — did the agent understand the request
-- `builtin.task_adherence` — did it do what was asked
-- `builtin.tool_call_accuracy` — did it call the right tool with valid args
-- `builtin.relevance`, `builtin.coherence`, `builtin.fluency` — response quality
-
-> Check the exact evaluator names available to you under **Foundry portal → Build → Evaluations → Evaluator catalog** and adjust `evaluators` in [dataset.json](dataset.json) if needed.
+| Evaluator | Scores | Measures |
+|-----------|--------|----------|
+| `builtin.tool_call_accuracy` | 1–5 | **Did the agent call the right MongoDB tools, with correct parameters?** This is the headline metric — it verifies the agent actually queried MongoDB rather than answering from the model's memory. |
+| `builtin.intent_resolution` | 1–5 | Did the agent understand what the user asked for |
+| `builtin.task_adherence` | 1–5 | Did it follow the instructions / do what was asked |
+| `builtin.relevance` | 1–5 | Is the answer relevant to the query |
+| `builtin.coherence` | 1–5 | Is the answer logically structured |
+| `builtin.fluency` | 1–5 | Is the answer well written |
 
 ---
 
-## ⚙️ One-time setup
+## 🛠️ How `tool_call_accuracy` works (and why `tool_definitions` is required)
 
-### 1. Configure OIDC (federated credentials) for `azure/login`
+This is the key evaluator for this sample — **calling MongoDB is the point**, and
+`tool_call_accuracy` is what verifies the agent did it.
 
-The workflow authenticates to Azure with OIDC (no stored secrets). Create an app
-registration (or use a user-assigned managed identity) with a **federated credential**
-for this GitHub repo, and grant it access to the Foundry project
-(e.g. **Azure AI Developer** role on the project/account).
+It needs **two** things wired into the data mapping:
 
-See: [Configure a federated identity credential for GitHub Actions](https://learn.microsoft.com/azure/developer/github/connect-from-azure-openid-connect).
+| Field | Mapped to | Why |
+|-------|-----------|-----|
+| `response` | `{{sample.output_items}}` | The agent's **structured** output — the `openapi_call` / `mcp_call` entries the evaluator parses to see which tools were invoked. (Plain `{{sample.output_text}}` carries no tool calls.) |
+| `tool_definitions` | `{{item.tool_definitions}}` | A **static, explicit** list of the tools available to the agent. Each entry must be flat, with a top-level `name`. |
 
-### 2. Add GitHub Actions **Variables**
+The `TOOL_DEFINITIONS` list lives at the top of [`run_eval_cloud.py`](run_eval_cloud.py) and is
+injected into every dataset row. The `name` values **must match the tool-call names the agent
+emits**:
 
-Repo → **Settings → Secrets and variables → Actions → Variables**:
+| Agent action | Emitted call name |
+|--------------|-------------------|
+| Direct lookup | `find` |
+| Aggregation / vector search | `aggregate` |
+| Count | `count` |
+| Embedding (semantic) | `EmbeddingGenerator_generateEmbedding` |
 
-| Variable | Example | Notes |
-|----------|---------|-------|
-| `AZURE_CLIENT_ID` | `<app-client-id>` | Identity with the federated credential |
-| `AZURE_TENANT_ID` | `<tenant-guid>` | Entra ID tenant |
-| `AZURE_SUBSCRIPTION_ID` | `<sub-guid>` | Subscription with the Foundry project |
-| `FOUNDRY_PROJECT_ENDPOINT` | `https://<account>.services.ai.azure.com/api/projects/<project>` | Foundry project endpoint |
-| `EVAL_DEPLOYMENT_NAME` | `gpt-4.1` | Model deployment used to run the evaluators |
-| `EVAL_AGENT_IDS` | `mongodb-search-agent:1` | `name:version`; comma-separate two to compare |
-| `EVAL_BASELINE_AGENT_ID` | `mongodb-search-agent:1` | *(optional)* Baseline for A/B comparison; leave unset to use the first id in `EVAL_AGENT_IDS` |
+> **Note:** because `tool_definitions` is included in the data, the other evaluators that
+> accept it (`intent_resolution`, `task_adherence`) also map it. The script already does this.
 
-> Find the project endpoint in the Foundry portal (project overview) or via
-> `az` (CognitiveServices account + project). Find the agent version in the
-> agent's header (e.g. "Version: 13").
+---
+
+## ✅ Prerequisites
+
+| Requirement | Notes |
+|-------------|-------|
+| Python 3.10+ | `pip install -r requirements.txt` |
+| `az login` | Your identity needs **Azure AI Developer** on the Foundry project |
+| Grader model deployment | e.g. `gpt-4.1` (used as the LLM judge) |
 
 ---
 
 ## ▶️ Run it
 
-- **Manually:** Actions tab → **Simple RAG Movies - Agent Evaluation** → **Run workflow**
-- **Automatically:** on push to `main` that touches the evals folder or the workflow file
-
-The report (scores, latency, token counts, and pass/fail per evaluator) appears in the
-**Actions run summary**.
-
-### Compare two agent versions (A/B)
-
-Set `EVAL_AGENT_IDS` to two comma-separated ids to get a statistical comparison:
-
-```
-mongodb-search-agent:1,mongodb-search-agent:2
-```
-
-By default the **first** id is the baseline. To pin a specific baseline explicitly,
-set the optional `EVAL_BASELINE_AGENT_ID` variable (e.g. `mongodb-search-agent:1`).
-Leave it unset for the default behavior.
-
----
-
-## 🧪 Quick local sanity check (optional)
-
-You can validate the dataset JSON shape before pushing:
-
-```powershell
-Get-Content samples/simple-rag-movies/evals/dataset.json | ConvertFrom-Json | Out-Null
-Write-Output "dataset.json is valid JSON"
-```
-
----
-
-## �️ Run in the Foundry portal (recommended for demos)
-
-The Foundry portal evaluation runs **server-side inside Azure** and shows the run
-natively under **Build → Evaluations** (tables, charts, per-row drill-down). This is
-the best option to demo or share with an audience.
-
-### Networking prerequisite
-
-The portal eval uploads results to the **project's storage account**. If that storage
-has public network access **Disabled**, the run fails with `AuthorizationFailure`.
-Because the Foundry service is a trusted Azure service, you only need public access
-enabled **with the firewall still closed to the open internet**:
-
-```powershell
-# Minimal, reversible: allow trusted Azure services (Foundry) through; deny the public internet.
-az storage account update `
-  --name <PROJECT_STORAGE_ACCOUNT> `
-  --resource-group <PROJECT_RG> `
-  --public-network-access Enabled `
-  --default-action Deny `
-  --bypass AzureServices
-
-# Revert after the demo:
-# az storage account update --name <PROJECT_STORAGE_ACCOUNT> --resource-group <PROJECT_RG> --public-network-access Disabled
-```
-
-> The **GitHub Action** route (above) instead needs `--default-action Allow`, because the
-> GitHub-hosted runner connects from a public IP and is **not** an Azure service — so the
-> `AzureServices` bypass doesn't cover it. The portal route is more secure for demos.
-
-### Steps
-
-1. Convert the dataset to JSONL (Foundry expects one JSON object per line):
-   ```powershell
-   (Get-Content samples/simple-rag-movies/evals/dataset.json -Raw | ConvertFrom-Json).data |
-     ForEach-Object { $_ | ConvertTo-Json -Compress } |
-     Set-Content -Path samples/simple-rag-movies/evals/dataset.jsonl -Encoding utf8
-   ```
-2. Go to [ai.azure.com](https://ai.azure.com) → your project → **Build → Evaluations**.
-3. **+ New evaluation** → **Evaluate an agent**.
-4. Select **mongodb-search-agent** → the working **version**.
-5. **Upload dataset** → `dataset.jsonl`; map the `query` column as the input.
-6. Pick evaluators: Intent resolution, Task adherence, Tool call accuracy, Relevance,
-   Coherence, Fluency.
-7. Grader model: **gpt-4.1** → **Run**.
-8. Results appear under **Build → Evaluations** — shareable and demo-ready.
-
-> `Tool call accuracy` scores correctly here because the portal extracts the agent's
-> tool calls automatically (the local runner can't, so it shows ERR for that one metric).
-
----
-
-## �💻 Run locally with the SDK (recommended for private-agent projects)
-
-If your Foundry project uses a **private storage account** (the CI action fails with
-`AuthorizationFailure` / `ResourceMsiTokenDoesntHavePermissionsOnStorage`), run the
-evaluators locally instead. The local runner invokes the agent and scores responses
-in-process, so it never touches the project storage.
-
 ```powershell
 cd samples/simple-rag-movies/evals
 
-# 1. Install dependencies (Python 3.10–3.12 recommended)
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Authenticate (DefaultAzureCredential)
+# 2. Authenticate
 az login
 
-# 3. Configure the target (or put these in a .env file)
-$env:FOUNDRY_PROJECT_ENDPOINT = "https://aiservicesktdp.services.ai.azure.com/api/projects/Mongodb-demo"
-$env:EVAL_AGENT_NAME = "mongodb-search-agent"
-$env:EVAL_AGENT_VERSION = "26"
-$env:EVAL_MODEL_DEPLOYMENT = "gpt-4.1"
+# 3. Configure the target
+$env:FOUNDRY_PROJECT_ENDPOINT = "https://<account>.services.ai.azure.com/api/projects/<project>"
+$env:FOUNDRY_AGENT_NAME       = "mongodb-search-agent"
+$env:FOUNDRY_AGENT_VERSIONS   = "<version>"  # e.g. "42"; leave unset for the latest version
+$env:FOUNDRY_MODEL_NAME       = "gpt-4.1"     # grader/judge model deployment
 
-# 4. Run
-python run_eval_local.py
+# 4. Submit the evaluation
+python run_eval_cloud.py
 ```
 
-Outputs a per-query console summary and writes detailed scores to `eval-results.json`.
+The script prints the **eval id** and each **run id**, then polls until completion.
 
-> Requires that your signed-in identity has **Azure AI Developer** on the project.
-> The model-graded evaluators call the `EVAL_MODEL_DEPLOYMENT` model as the judge.
+### Compare multiple agent versions
+
+Pass a comma-separated list of versions to evaluate several at once. Each version
+becomes its own run under the **same evaluation**, so you can multi-select them in the
+portal and compare how each performs against the dataset:
+
+```powershell
+$env:FOUNDRY_AGENT_VERSIONS = "40,42"
+python run_eval_cloud.py
+```
+
+Then in **Build → Evaluations**, open the `simple-rag-movies-eval` evaluation and use
+**Select multiple runs to compare results statistically** to view the versions side by side.
+
+### View results
+
+Go to [ai.azure.com](https://ai.azure.com) → your project → **Build → Evaluations** →
+open **`simple-rag-movies-eval`**. You'll see per-query scores for every evaluator, plus
+charts and drill-down. When you evaluate multiple versions, select all the runs to
+compare them statistically — shareable and demo-ready.
 
 ---
 
-## 🔧 Customizing
+## 🔧 Configuration
 
-- **Smaller/faster run:** point `data-path` at `dataset-tiny.json` in the workflow.
-- **More evaluators:** add names from your evaluator catalog to the `evaluators` array.
-- **Custom / OpenAI graders:** see the action's
-  [sample data files](https://github.com/microsoft/ai-agent-evals/tree/main/samples/data)
-  for `openai_graders`, `evaluator_parameters`, and `data_mapping` examples.
+| Env var | Default | Description |
+|---------|---------|-------------|
+| `FOUNDRY_PROJECT_ENDPOINT` | — (required) | `https://<account>.services.ai.azure.com/api/projects/<project>` |
+| `FOUNDRY_AGENT_NAME` | `mongodb-search-agent` | Agent to evaluate |
+| `FOUNDRY_AGENT_VERSIONS` | latest | Comma-separated versions, e.g. `42` or `40,42` |
+| `FOUNDRY_MODEL_NAME` | `gpt-4.1` | LLM judge / grader model deployment |
+| `EVAL_RUN_NAME` | `simple-rag-movies-eval` | Display name in the portal |
+
+To change the evaluators or test queries, edit the `build_testing_criteria()` function
+in [`run_eval_cloud.py`](run_eval_cloud.py) and the queries in
+[`dataset.json`](dataset.json).
+
+> **Note:** evaluate the agent with **memory disabled** so each test query is graded
+> independently and runs are reproducible.
 
 ---
 
 ## 📚 References
 
-- [microsoft/ai-agent-evals (Marketplace action)](https://github.com/microsoft/ai-agent-evals)
+- [Agent evaluation sample (azure-ai-projects)](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/evaluations)
 - [Foundry Observability Concepts](https://learn.microsoft.com/azure/ai-foundry/concepts/observability)
 - [Evaluation evaluators](https://learn.microsoft.com/azure/ai-foundry/concepts/evaluation-evaluators/)
