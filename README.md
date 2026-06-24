@@ -1,11 +1,10 @@
 # MongoDB & Foundry Sample
 
-A deployable code sample demonstrating how to build an intelligent agent with **MongoDB Atlas** and **Azure AI Foundry**.
+The repository includes building an intelligent movie-database agent within **Microsoft Foundry** project, grounded on **MongoDB Atlas** (sample_mflix). The agent answers **natural-language questions** by picking the right strategy itself — direct queries (filter by year, cast, genre), aggregations (top-rated, counts), and semantic vector search (find by meaning, e.g. "movies about hope and redemption").
 
-> **Credit:** This repository is based on and adapted from the original
-> [vpriyanshi/mongodb-foundry-agent](https://github.com/vpriyanshi/mongodb-foundry-agent).
-> Thanks to the original authors. This copy extends the sample into a guided Developer Day
-> workshop (Foundry setup → base agent → evaluations → APIM MCP gateway).
+It uses **two tools** — an EmbeddingGenerator (OpenAPI) and MongoDB MCP — both running on Azure Container Apps, with models served from a Microsoft Foundry project . The sample is a guided 4-step workshop: Foundry setup → base agent → evaluations → APIM MCP gateway.
+
+
 
 ## Sample
 
