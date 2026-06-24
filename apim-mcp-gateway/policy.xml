@@ -1,0 +1,36 @@
+<!--
+    Body-safe APIM inbound policy for MCP exposure.
+
+    CRITICAL: Do NOT read or rewrite context.Request.Body or context.Response.Body.
+    Any body access enables response buffering that breaks the Server-Sent Events
+    streaming MCP relies on, which makes `tools/list` time out and tool discovery fail.
+
+    This policy only:
+      - strips the internal APIM subscription key header before forwarding
+      - leaves the request/response body completely untouched
+
+    OPTIONAL GOVERNANCE (uncomment to require Entra ID JWT with role-based access,
+    matching the foundry-integration pattern). Replace the placeholders first.
+-->
+<policies>
+    <inbound>
+        <base />
+        <!--
+        <validate-azure-ad-token tenant-id="{{TENANT_ID}}" failed-validation-httpcode="401">
+            <audiences>
+                <audience>api://{{APIM_APP_CLIENT_ID}}</audience>
+            </audiences>
+        </validate-azure-ad-token>
+        -->
+        <set-header name="Ocp-Apim-Subscription-Key" exists-action="delete" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

@@ -1,0 +1,19 @@
+{
+  "name": "simple-rag-movies-eval-tiny",
+  "evaluators": [
+    "builtin.task_adherence",
+    "builtin.tool_call_accuracy",
+    "builtin.relevance"
+  ],
+  "data": [
+    {
+      "query": "Show me movies from 1994"
+    },
+    {
+      "query": "Find movies about hope and redemption"
+    },
+    {
+      "query": "What are the top 10 highest rated sci-fi movies?"
+    }
+  ]
+}

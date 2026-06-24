@@ -92,7 +92,7 @@ az storage account create \
 az functionapp create \
   --name embedding-api-func \
   --resource-group mongodb-agent-rg \
-  --storage-account embeddingfuncstore \
+  --storage-account embeddingfuncstore512965 \
   --consumption-plan-location eastus \
   --runtime python \
   --runtime-version 3.11 \

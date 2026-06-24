@@ -54,3 +54,6 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Build artifacts
+*.zip

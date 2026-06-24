@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "https://YOUR_FUNCTION_APP.azurewebsites.net/api",
-      "description": "Azure Function App endpoint"
+      "url": "https://embedding-func-ca.bluecoast-1ca61fd2.eastus.azurecontainerapps.io/api",
+      "description": "Azure Container App endpoint"
     }
   ],
   "paths": {

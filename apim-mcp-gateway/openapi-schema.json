@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Movies Tool API",
+    "description": "Embeddings + MongoDB query operations exposed for Azure AI Foundry agents via APIM MCP.",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://<CONTAINER_APP_FQDN>/api",
+      "description": "Azure Container App backend (FastAPI/Flask REST API). Overridden by backendBaseUrl at APIM import time."
+    }
+  ],
+  "paths": {
+    "/embed": {
+      "post": {
+        "operationId": "generateEmbedding",
+        "summary": "Generate an embedding vector for text",
+        "description": "Takes a text string and returns a 1536-dimensional embedding vector suitable for MongoDB vector search.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The text to generate an embedding for",
+                    "example": "movies about hope and redemption"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Embedding generated successfully" },
+          "400": { "description": "Bad request" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/mongo/vector-search": {
+      "post": {
+        "operationId": "mongoVectorSearch",
+        "summary": "Run a MongoDB Atlas vector search",
+        "description": "Performs $vectorSearch on the embedded_movies collection using a query embedding.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["queryEmbedding"],
+                "properties": {
+                  "queryEmbedding": {
+                    "type": "array",
+                    "items": { "type": "number" },
+                    "description": "1536-dim query vector from generateEmbedding"
+                  },
+                  "collection": { "type": "string", "default": "embedded_movies" },
+                  "limit": { "type": "integer", "default": 10 },
+                  "numCandidates": { "type": "integer", "default": 100 },
+                  "project": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Vector search results" },
+          "400": { "description": "Bad request" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/mongo/find": {
+      "post": {
+        "operationId": "mongoFind",
+        "summary": "Run a MongoDB find query",
+        "description": "Structured lookups by field (year, genre, cast, rating). No embeddings required.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "collection": { "type": "string", "default": "movies" },
+                  "filter": { "type": "object", "example": { "year": 1994 } },
+                  "projection": { "type": "object", "example": { "title": 1, "year": 1, "_id": 0 } },
+                  "sort": { "type": "object", "example": { "imdb.rating": -1 } },
+                  "limit": { "type": "integer", "default": 20 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Find query results" },
+          "400": { "description": "Bad request" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/mongo/aggregate": {
+      "post": {
+        "operationId": "mongoAggregate",
+        "summary": "Run a MongoDB aggregation pipeline",
+        "description": "Grouping, sorting, counting and statistics over the movies collection.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pipeline"],
+                "properties": {
+                  "collection": { "type": "string", "default": "movies" },
+                  "pipeline": {
+                    "type": "array",
+                    "items": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Aggregation results" },
+          "400": { "description": "Bad request" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Service health check",
+        "responses": {
+          "200": { "description": "Service health" }
+        }
+      }
+    }
+  }
+}

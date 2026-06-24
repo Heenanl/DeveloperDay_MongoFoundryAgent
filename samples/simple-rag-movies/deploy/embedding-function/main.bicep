@@ -40,11 +40,14 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   }
 }
 
-// Function App
+// Function App with Managed Identity
 resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
   name: functionAppName
   location: location
   kind: 'functionapp,linux'
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
@@ -78,6 +81,17 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
       ]
     }
     httpsOnly: true
+  }
+}
+
+// Grant Storage File Data SMB Share Contributor role to the function app's managed identity
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: storageAccount
+  name: guid(subscription().id, functionAppName, 'b7e6dc6d-f1e8-4753-8033-0f276bb3955b')
+  properties: {
+    principalId: functionApp.identity.principalId
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '0c867c2a-1d8c-454a-a3db-ab2ea1bdc13b')
+    principalType: 'ServicePrincipal'
   }
 }
 

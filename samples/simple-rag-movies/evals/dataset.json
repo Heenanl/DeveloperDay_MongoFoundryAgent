@@ -1,0 +1,53 @@
+{
+  "name": "simple-rag-movies-eval",
+  "evaluators": [
+    "builtin.intent_resolution",
+    "builtin.task_adherence",
+    "builtin.tool_call_accuracy",
+    "builtin.relevance",
+    "builtin.coherence",
+    "builtin.fluency"
+  ],
+  "data": [
+    {
+      "query": "Show me movies from 1994",
+      "ground_truth": "Returns a list of movies released in 1994 from the MongoDB catalog (e.g., The Shawshank Redemption, Pulp Fiction, Forrest Gump) using a structured find query, not semantic search."
+    },
+    {
+      "query": "List comedy movies",
+      "ground_truth": "Returns movies whose genres include Comedy using a structured find filter on the movies collection."
+    },
+    {
+      "query": "Movies starring Tom Hanks",
+      "ground_truth": "Returns movies where the cast array contains Tom Hanks using a structured find filter."
+    },
+    {
+      "query": "What are the top 10 highest rated sci-fi movies?",
+      "ground_truth": "Returns the 10 highest imdb.rating Sci-Fi movies using an aggregation pipeline (match genre, sort by rating desc, limit 10)."
+    },
+    {
+      "query": "How many movies are there per genre?",
+      "ground_truth": "Returns a count of movies grouped by genre using an aggregation pipeline (group + count)."
+    },
+    {
+      "query": "Find movies about hope and redemption",
+      "ground_truth": "Performs semantic vector search: generates an embedding for the query, then runs vector search over the embedded_movies collection and returns thematically relevant films such as The Shawshank Redemption."
+    },
+    {
+      "query": "Films exploring loneliness and isolation",
+      "ground_truth": "Performs semantic vector search using a generated embedding over embedded_movies and returns thematically relevant films."
+    },
+    {
+      "query": "Movies about second chances and starting over",
+      "ground_truth": "Performs semantic vector search using a generated embedding over embedded_movies and returns thematically relevant films."
+    },
+    {
+      "query": "Show me movies from 1850",
+      "ground_truth": "Returns no results because the catalog has no movies from 1850. The agent should report that no movies were found and must NOT invent titles from general knowledge."
+    },
+    {
+      "query": "Movies starring SomeNonexistentActorXYZ",
+      "ground_truth": "Returns no results because no such actor exists in the catalog. The agent should report no results and must NOT fabricate movies."
+    }
+  ]
+}
