@@ -14,7 +14,6 @@ echo ""
 
 # Check prerequisites
 command -v az >/dev/null 2>&1 || { echo "Azure CLI is required. Install from https://docs.microsoft.com/cli/azure/install-azure-cli"; exit 1; }
-command -v func >/dev/null 2>&1 || { echo "Azure Functions Core Tools required. Install from https://docs.microsoft.com/azure/azure-functions/functions-run-local"; exit 1; }
 
 # Prompt for required values
 read -p "Resource Group Name [mongodb-agent-rg]: " RESOURCE_GROUP
@@ -29,20 +28,22 @@ if [ -z "$MDB_CONNECTION_STRING" ]; then
     exit 1
 fi
 
-read -p "Azure OpenAI Endpoint (e.g., https://myresource.openai.azure.com): " OPENAI_ENDPOINT
+read -p "Azure AI Foundry resource endpoint (e.g., https://myfoundry.openai.azure.com): " OPENAI_ENDPOINT
 if [ -z "$OPENAI_ENDPOINT" ]; then
-    echo "Azure OpenAI endpoint is required"
+    echo "Foundry resource endpoint is required"
     exit 1
 fi
 
-read -p "Azure OpenAI API Key: " OPENAI_KEY
+read -p "Azure AI Foundry resource key: " OPENAI_KEY
 if [ -z "$OPENAI_KEY" ]; then
-    echo "Azure OpenAI API key is required"
+    echo "Foundry resource key is required"
     exit 1
 fi
 
 read -p "Embedding Model Name [text-embedding-ada-002]: " EMBEDDING_MODEL
 EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-ada-002}
+
+MOVIES_API_NAME="movies-tool-api"
 
 echo ""
 echo "=== Creating Resource Group ==="
@@ -60,38 +61,39 @@ MCP_URL=$(echo $MCP_OUTPUT | jq -r '.mcpServerUrl.value')
 echo "MCP Server URL: $MCP_URL"
 
 echo ""
-echo "=== Deploying Embedding Function ==="
-FUNC_OUTPUT=$(az deployment group create \
-    --resource-group $RESOURCE_GROUP \
-    --template-file deploy/embedding-function/main.bicep \
-    --parameters azureOpenAIEndpoint="$OPENAI_ENDPOINT" \
-                 azureOpenAIKey="$OPENAI_KEY" \
-                 embeddingModel="$EMBEDDING_MODEL" \
-    --query "properties.outputs" -o json)
-
-FUNC_NAME=$(echo $FUNC_OUTPUT | jq -r '.functionAppName.value')
-EMBED_URL=$(echo $FUNC_OUTPUT | jq -r '.functionAppUrl.value')
-
-echo "Embedding Function URL: $EMBED_URL"
-
-echo ""
-echo "=== Deploying Function Code ==="
-cd src/embedding-function
-func azure functionapp publish $FUNC_NAME
+echo "=== Deploying Movies Tool API (Container Apps, build from source) ==="
+cd src/movies-api
+az containerapp up \
+    --name "$MOVIES_API_NAME" \
+    --resource-group "$RESOURCE_GROUP" \
+    --location "$LOCATION" \
+    --source . \
+    --target-port 8080 \
+    --ingress external \
+    --env-vars \
+        AZURE_OPENAI_ENDPOINT="$OPENAI_ENDPOINT" \
+        AZURE_OPENAI_API_KEY="$OPENAI_KEY" \
+        EMBEDDING_MODEL="$EMBEDDING_MODEL" \
+        MONGODB_CONNECTION_STRING="$MDB_CONNECTION_STRING"
 cd ../..
+
+API_FQDN=$(az containerapp show --name "$MOVIES_API_NAME" --resource-group "$RESOURCE_GROUP" \
+    --query "properties.configuration.ingress.fqdn" -o tsv)
+API_BASE_URL="https://$API_FQDN/api"
+echo "Movies Tool API: $API_BASE_URL"
 
 echo ""
 echo "=========================================="
 echo "Deployment Complete!"
 echo "=========================================="
 echo ""
-echo "MCP Server URL: $MCP_URL"
-echo "Embedding API URL: $EMBED_URL"
+echo "MCP Server URL  : $MCP_URL"
+echo "Movies Tool API : $API_BASE_URL"
 echo ""
 echo "Next Steps:"
 echo "1. Go to https://ai.azure.com"
 echo "2. Create a new agent"
-echo "3. Add OpenAPI tool with URL: $EMBED_URL"
-echo "4. Add MCP tool with URL: $MCP_URL"
+echo "3. Add OpenAPI tool (EmbeddingGenerator) with server URL: $API_BASE_URL"
+echo "4. Add MCP tool (MongoDB) with URL: $MCP_URL"
 echo "5. Copy instructions from docs/agent-instructions.md"
 echo ""

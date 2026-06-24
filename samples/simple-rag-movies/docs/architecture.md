@@ -25,16 +25,16 @@ This document describes the architecture of the MongoDB Vector Search Agent.
                │                         │
                ▼                         ▼
     ┌──────────────────┐      ┌──────────────────────┐
-    │  Azure Function  │      │   Azure Container    │
-    │ (Embedding API)  │      │   Apps (MCP Server)  │
-    │                  │      │                      │
+    │ Movies Tool API  │      │   Azure Container    │
+    │ (Container Apps) │      │   Apps (MCP Server)  │
+    │             │                           │
     │  POST /api/embed │      │   /mcp endpoint      │
-    └────────┬─────────┘      └──────────┬───────────┘
+    └────────┬────────┘      └──────────┬───────────┘
              │                           │
              ▼                           ▼
     ┌──────────────────┐      ┌──────────────────────┐
-    │   Azure OpenAI   │      │   MongoDB Atlas      │
-    │                  │      │                      │
+    │ Azure AI Foundry │      │   MongoDB Atlas      │
+    │ models           │      │                      │
     │ text-embedding-  │      │ sample_mflix DB      │
     │ ada-002          │      │ • movies             │
     │ (1536 dims)      │      │ • embedded_movies    │
@@ -49,11 +49,12 @@ This document describes the architecture of the MongoDB Vector Search Agent.
 - **Role**: Orchestrates tool calls based on user queries
 - **Decision Logic**: Chooses between direct queries and vector search
 
-### 2. Embedding Function (Azure Functions)
-- **Runtime**: Python 3.11, Consumption plan
-- **Input**: Text string
+### 2. Movies Tool API (Azure Container Apps)
+- **Runtime**: Python 3.11 Flask container (`server.py` + `Dockerfile`)
+- **Input**: Text string (for `/api/embed`)
 - **Output**: 1536-dimensional embedding vector
-- **Uses**: Azure OpenAI text-embedding-ada-002
+- **Uses**: An embedding model deployed in your Azure AI Foundry project (e.g. text-embedding-ada-002)
+- **Note**: Also serves `/api/mongo/*` REST routes used by the APIM step (Step 3); the base agent only calls `/api/embed`.
 
 ### 3. MongoDB MCP Server (Azure Container Apps)
 - **Image**: mongodb/mongodb-mcp-server:latest
@@ -85,8 +86,8 @@ User: "Find movies about hope"
            │
            ▼
    ┌───────────────┐
-   │   Azure OpenAI│─── Returns [0.012, -0.034, ...]
-   │   (ada-002)   │    (1536 floats)
+   │ Foundry models│─── Returns [0.012, -0.034, ...]
+   │  (ada-002)    │    (1536 floats)
    └───────┬───────┘
            │
            ▼
@@ -155,13 +156,13 @@ User: "Movies from 1994"
 
 | Component | Pricing Model | Typical Cost |
 |-----------|---------------|--------------|
-| Azure Function | Consumption (pay-per-execution) | ~$0/month for low usage |
-| Container App | Consumption (pay-per-vCPU-second) | ~$5/month |
-| Azure OpenAI | Per 1K tokens | ~$0.0001/query |
+| Movies Tool API (Container App) | Consumption (pay-per-vCPU-second) | ~$5/month |
+| MCP Server (Container App) | Consumption (pay-per-vCPU-second) | ~$5/month |
+| Azure AI Foundry (embeddings) | Per 1K tokens | ~$0.0001/query |
 | MongoDB Atlas | M0 (free) to M10+ | $0 - $57+/month |
 
 ## Scaling Considerations
 
-- **Azure Function**: Auto-scales, no configuration needed
+- **Movies Tool API**: Container App auto-scales by replica count (set minReplicas/maxReplicas)
 - **MCP Server**: Set minReplicas/maxReplicas for predictable scaling
 - **MongoDB Atlas**: Choose appropriate tier for query volume

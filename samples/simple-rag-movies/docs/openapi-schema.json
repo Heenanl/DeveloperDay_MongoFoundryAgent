@@ -2,13 +2,13 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Embedding API",
-    "description": "Generate text embeddings using Azure OpenAI text-embedding-ada-002 model for vector search operations.",
+    "description": "Generate text embeddings using an embedding model deployed in your Azure AI Foundry project for vector search operations.",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://embedding-func-ca.bluecoast-1ca61fd2.eastus.azurecontainerapps.io/api",
-      "description": "Azure Container App endpoint"
+      "url": "https://<your-movies-tool-api-fqdn>/api",
+      "description": "Azure Container App endpoint — replace with your Movies Tool API URL (e.g. https://movies-tool-api.<region>.azurecontainerapps.io/api)"
     }
   ],
   "paths": {

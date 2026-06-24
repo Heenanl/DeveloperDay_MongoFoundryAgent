@@ -59,5 +59,7 @@ htmlcov/
 *.zip
 
 # Eval artifacts (local venv / generated files)
-samples/simple-rag-movies/evals/.venv*/
-samples/simple-rag-movies/evals/*.jsonl
+samples/simple-rag-movies/02-evals/.venv*/
+samples/simple-rag-movies/02-evals/*.jsonl
+
+/developer-day-readiness/*

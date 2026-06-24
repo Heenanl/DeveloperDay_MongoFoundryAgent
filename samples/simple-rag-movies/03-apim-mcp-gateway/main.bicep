@@ -3,7 +3,12 @@
 // so it can be exposed as an MCP server via APIM's native MCP feature.
 //
 // Pattern: REST API (Container App) -> APIM API import -> APIM "Expose as MCP".
-// The inbound policy is intentionally body-free so MCP streaming (tools/list) works.
+//
+// IMPORTANT: by default this template does NOT attach an API-level policy.
+// The portal "Expose an API as an MCP server" wizard fails with
+// `Unexpected token '<'` when an API-level policy is present. Import the API
+// first (no policy), create the MCP server in the portal, THEN optionally apply
+// the body-safe hardening policy by setting applyApiPolicy=true and redeploying.
 // =============================================================================
 
 @description('Name of the EXISTING APIM service to import the API into.')
@@ -23,6 +28,9 @@ param apiPath string = 'movies'
 
 @description('Whether a subscription key is required to call the API. Keep false so Foundry/MCP can call without a key.')
 param subscriptionRequired bool = false
+
+@description('Attach the body-safe API-level policy. Keep FALSE for the initial import so the portal "Expose as MCP" wizard works; set TRUE to apply policy as a later hardening step (after the MCP server is created).')
+param applyApiPolicy bool = false
 
 // Load the OpenAPI spec and the body-safe inbound policy from this folder.
 var openApiSpec = loadTextContent('openapi-schema.json')
@@ -48,7 +56,7 @@ resource api 'Microsoft.ApiManagement/service/apis@2023-05-01-preview' = {
   }
 }
 
-resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2023-05-01-preview' = {
+resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2023-05-01-preview' = if (applyApiPolicy) {
   parent: api
   name: 'policy'
   properties: {

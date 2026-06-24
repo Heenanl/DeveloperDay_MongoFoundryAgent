@@ -15,10 +15,14 @@ Thank you for your interest in contributing to this project!
 ## Development Setup
 
 1. Clone the repository
-2. Copy `src/embedding-function/local.settings.json.template` to `local.settings.json`
-3. Fill in your Azure OpenAI credentials
-4. Install Azure Functions Core Tools
-5. Run `func start` from the `src/embedding-function` directory
+2. Run the Movies Tool API locally from `src/movies-api`:
+   ```bash
+   cd samples/simple-rag-movies/src/movies-api
+   pip install -r requirements.txt
+   ```
+3. Set the required environment variables (`AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`,
+   `EMBEDDING_MODEL`, `MONGODB_CONNECTION_STRING`) — point them at your Azure AI Foundry resource.
+4. Run the API: `python server.py` (listens on port 8080)
 
 ## Code Style
 

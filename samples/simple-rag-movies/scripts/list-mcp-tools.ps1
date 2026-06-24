@@ -1,5 +1,16 @@
+# Lists the tools exposed by a deployed MongoDB MCP server.
+#
+# Usage:
+#   ./list-mcp-tools.ps1 -McpUrl "https://<your-mcp-server-fqdn>/mcp"
+#
+# Get the MCP URL from the MongoDB MCP Server deployment output (mcpServerUrl).
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$McpUrl
+)
+
 $ErrorActionPreference = 'Stop'
-$base = 'https://mongo-mcp-server.delightfulstone-4b0d5d27.eastus.azurecontainerapps.io/mcp'
+$base = $McpUrl
 $headers = @{ Accept = 'application/json, text/event-stream' }
 
 $init = '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"probe","version":"1.0"}}}'

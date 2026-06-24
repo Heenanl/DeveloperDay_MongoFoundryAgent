@@ -1,5 +1,7 @@
 # 🧪 Agent Evaluation — simple-rag-movies
 
+> **Step 2 of the [simple-rag-movies](../README.md) workshop.** Build the base agent first, then add these evaluations, then the [APIM MCP gateway](../03-apim-mcp-gateway/).
+
 Code-based, **portal-visible** evaluation for the **simple-rag-movies** Foundry agent.
 
 [`run_eval_cloud.py`](run_eval_cloud.py) submits an evaluation to your Foundry project
@@ -20,7 +22,7 @@ Based on the official sample:
 ## 📁 Files
 
 ```
-samples/simple-rag-movies/evals/
+samples/simple-rag-movies/02-evals/
 ├── run_eval_cloud.py   # Submits a portal-visible eval run; also holds the static TOOL_DEFINITIONS
 ├── dataset.json        # Test queries (structured, aggregation, semantic, no-hallucination)
 ├── requirements.txt    # Python dependencies
@@ -94,7 +96,7 @@ emits**:
 ## ▶️ Run it
 
 ```powershell
-cd samples/simple-rag-movies/evals
+cd samples/simple-rag-movies/02-evals
 
 # 1. Install dependencies
 pip install -r requirements.txt

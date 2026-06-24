@@ -6,14 +6,15 @@ A deployable code sample demonstrating how to build an intelligent agent with **
 
 | Sample | Description | Key Technologies |
 |--------|-------------|------------------|
-| [**Simple RAG on Movies**](./samples/simple-rag-movies/) | Semantic search over MongoDB movie data using vector embeddings and MCP | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Container Apps, MCP |
+| [**Simple RAG on Movies**](./samples/simple-rag-movies/) | A 3-step build: a semantic-search movie agent, then agent evaluations, then an APIM MCP gateway | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Container Apps, MCP, Azure API Management |
 
-## Supporting modules
+The sample is structured as a progression so you can build it up step by step:
 
-| Module | Description |
-|--------|-------------|
-| [**apim-mcp-gateway**](./apim-mcp-gateway/) | Expose the movies REST API as an MCP server through Azure API Management (Bring Your Own AI Gateway) |
-| [**aigateway-integration**](./aigateway-integration/) | Connect a Foundry project to models/tools through an APIM AI gateway |
+| Step | Path | What you add |
+|------|------|--------------|
+| 1. Base agent | [`samples/simple-rag-movies/`](./samples/simple-rag-movies/) | Foundry agent with EmbeddingGenerator (OpenAPI) + MongoDB (MCP) tools |
+| 2. Evaluations | [`samples/simple-rag-movies/02-evals/`](./samples/simple-rag-movies/02-evals/) | Portal-visible agent evaluations |
+| 3. APIM MCP gateway | [`samples/simple-rag-movies/03-apim-mcp-gateway/`](./samples/simple-rag-movies/03-apim-mcp-gateway/) | Expose the API as a governed MCP server via Azure API Management |
 
 ## Common Prerequisites
 
@@ -44,19 +45,16 @@ mongodb-foundry-agent/
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 ├── .gitignore
-├── .github/
-│   └── workflows/                     # CI, including agent evaluation workflow
-├── apim-mcp-gateway/                  # Expose the REST API as an MCP server via APIM
-├── aigateway-integration/             # Foundry ↔ APIM AI gateway connection
 └── samples/
-    └── simple-rag-movies/             # Semantic search agent over movies
-        ├── README.md                  # Full setup & deployment guide
+    └── simple-rag-movies/             # 3-step build: agent → evals → APIM gateway
+        ├── README.md                  # Workshop guide & base agent setup
         ├── src/                       # Source code (Container App REST API)
         ├── deploy/                    # Bicep & ARM templates
         ├── docs/                      # Architecture, agent instructions, OpenAPI spec
-        ├── evals/                     # Agent evaluation datasets & workflow docs
         ├── scripts/                   # Deployment & helper scripts
-        └── sample-queries.md          # Example queries to test the agent
+        ├── sample-queries.md          # Example queries to test the agent
+        ├── 02-evals/                  # Step 2: agent evaluations
+        └── 03-apim-mcp-gateway/       # Step 3: expose the API as an MCP server via APIM
 ```
 
 ## Contributing
@@ -72,4 +70,4 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 - [Azure AI Foundry Documentation](https://learn.microsoft.com/azure/ai-studio/)
 - [MongoDB Atlas Vector Search](https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-overview/)
 - [MCP (Model Context Protocol)](https://modelcontextprotocol.io/)
-- [Azure Functions Python Guide](https://learn.microsoft.com/azure/azure-functions/functions-reference-python)
+- [Azure Container Apps Documentation](https://learn.microsoft.com/azure/container-apps/)

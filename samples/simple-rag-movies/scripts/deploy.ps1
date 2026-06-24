@@ -1,4 +1,11 @@
 # MongoDB Vector Search Agent - Quick Deployment Script (PowerShell)
+#
+# Deploys both Azure Container Apps for the base agent:
+#   1. MongoDB MCP Server   (deploy/mcp-server/main.bicep)
+#   2. Movies Tool API      (built from src/movies-api via `az containerapp up`)
+#
+# Models (chat + embeddings) are served by your Azure AI Foundry resource — the Foundry
+# endpoint is Azure OpenAI-compatible, so pass the Foundry resource endpoint/key below.
 
 param(
     [string]$ResourceGroup = "mongodb-agent-rg",
@@ -9,7 +16,8 @@ param(
     [string]$AzureOpenAIEndpoint,
     [Parameter(Mandatory=$true)]
     [string]$AzureOpenAIKey,
-    [string]$EmbeddingModel = "text-embedding-ada-002"
+    [string]$EmbeddingModel = "text-embedding-ada-002",
+    [string]$MoviesApiName = "movies-tool-api"
 )
 
 $ErrorActionPreference = "Stop"
@@ -27,10 +35,6 @@ if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
     throw "Azure CLI is required. Install from https://docs.microsoft.com/cli/azure/install-azure-cli"
 }
 
-if (-not (Get-Command func -ErrorAction SilentlyContinue)) {
-    throw "Azure Functions Core Tools required. Install from https://docs.microsoft.com/azure/azure-functions/functions-run-local"
-}
-
 Write-Host "=== Creating Resource Group ===" -ForegroundColor Yellow
 az group create --name $ResourceGroup --location $Location | Out-Null
 
@@ -44,37 +48,40 @@ $mcpOutput = az deployment group create `
 $mcpUrl = $mcpOutput.mcpServerUrl.value
 Write-Host "MCP Server URL: $mcpUrl" -ForegroundColor Green
 
-Write-Host "=== Deploying Embedding Function ===" -ForegroundColor Yellow
-$funcOutput = az deployment group create `
+Write-Host "=== Deploying Movies Tool API (Container Apps, build from source) ===" -ForegroundColor Yellow
+Push-Location src/movies-api
+az containerapp up `
+    --name $MoviesApiName `
     --resource-group $ResourceGroup `
-    --template-file deploy/embedding-function/main.bicep `
-    --parameters azureOpenAIEndpoint="$AzureOpenAIEndpoint" `
-                 azureOpenAIKey="$AzureOpenAIKey" `
-                 embeddingModel="$EmbeddingModel" `
-    --query "properties.outputs" -o json | ConvertFrom-Json
-
-$funcName = $funcOutput.functionAppName.value
-$embedUrl = $funcOutput.functionAppUrl.value
-Write-Host "Embedding Function URL: $embedUrl" -ForegroundColor Green
-
-Write-Host "=== Deploying Function Code ===" -ForegroundColor Yellow
-Push-Location src/embedding-function
-func azure functionapp publish $funcName
+    --location $Location `
+    --source . `
+    --target-port 8080 `
+    --ingress external `
+    --env-vars `
+        AZURE_OPENAI_ENDPOINT="$AzureOpenAIEndpoint" `
+        AZURE_OPENAI_API_KEY="$AzureOpenAIKey" `
+        EMBEDDING_MODEL="$EmbeddingModel" `
+        MONGODB_CONNECTION_STRING="$MongoDBConnectionString" | Out-Null
 Pop-Location
+
+$apiFqdn = az containerapp show --name $MoviesApiName --resource-group $ResourceGroup `
+    --query "properties.configuration.ingress.fqdn" -o tsv
+$apiBaseUrl = "https://$apiFqdn/api"
+Write-Host "Movies Tool API: $apiBaseUrl" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "Deployment Complete!" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "MCP Server URL: $mcpUrl"
-Write-Host "Embedding API URL: $embedUrl"
+Write-Host "MCP Server URL    : $mcpUrl"
+Write-Host "Movies Tool API   : $apiBaseUrl"
 Write-Host ""
 Write-Host "Next Steps:" -ForegroundColor Yellow
 Write-Host "1. Go to https://ai.azure.com"
 Write-Host "2. Create a new agent"
-Write-Host "3. Add OpenAPI tool with URL: $embedUrl"
-Write-Host "4. Add MCP tool with URL: $mcpUrl"
+Write-Host "3. Add OpenAPI tool (EmbeddingGenerator) with server URL: $apiBaseUrl"
+Write-Host "4. Add MCP tool (MongoDB) with URL: $mcpUrl"
 Write-Host "5. Copy instructions from docs/agent-instructions.md"
 Write-Host ""
 
@@ -83,6 +90,6 @@ Pop-Location
 
 # Return URLs for programmatic use
 return @{
-    McpServerUrl = $mcpUrl
-    EmbeddingUrl = $embedUrl
+    McpServerUrl  = $mcpUrl
+    MoviesApiUrl  = $apiBaseUrl
 }
