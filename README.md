@@ -1,15 +1,19 @@
-# MongoDB & Foundry Samples
+# MongoDB & Foundry Sample
 
-A collection of deployable code samples demonstrating how to build intelligent agents with **MongoDB Atlas** and **Azure AI Foundry**.
+A deployable code sample demonstrating how to build an intelligent agent with **MongoDB Atlas** and **Azure AI Foundry**.
 
-## Samples
+## Sample
 
 | Sample | Description | Key Technologies |
 |--------|-------------|------------------|
-| [**Simple RAG on Movies**](./samples/simple-rag-movies/) | Semantic search over MongoDB movie data using vector embeddings and MCP | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Functions, MCP |
-| [**Multimodal Product Search**](./samples/multimodal-product-search/) | Visual product search using text, images, or both with multimodal embeddings | Azure AI Foundry, MongoDB Atlas Vector Search, Voyage AI, Azure Functions, MCP |
-| [**Voice Customer Support**](./samples/voice-customer-support/) | Voice-enabled logistics support agent with order tracking, policy search, and ticket creation | Azure AI Foundry, GPT Realtime API, MongoDB Atlas, Azure Functions, MCP |
-| [**Insurance Claim Agent**](./samples/insurance-claim-agent/) | Multi-agent insurance claim filing and assessment with image analysis and policy search | Azure AI Foundry, GPT-4o, Voyage AI, MongoDB Atlas Vector Search, Azure Functions, MCP |
+| [**Simple RAG on Movies**](./samples/simple-rag-movies/) | Semantic search over MongoDB movie data using vector embeddings and MCP | Azure AI Foundry, MongoDB Atlas Vector Search, Azure Container Apps, MCP |
+
+## Supporting modules
+
+| Module | Description |
+|--------|-------------|
+| [**apim-mcp-gateway**](./apim-mcp-gateway/) | Expose the movies REST API as an MCP server through Azure API Management (Bring Your Own AI Gateway) |
+| [**aigateway-integration**](./aigateway-integration/) | Connect a Foundry project to models/tools through an APIM AI gateway |
 
 ## Common Prerequisites
 
@@ -22,11 +26,11 @@ A collection of deployable code samples demonstrating how to build intelligent a
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/vpriyanshi/mongodb-foundry-agent.git
+   git clone https://github.com/Heenanl/mongodb-foundry-agent.git
    cd mongodb-foundry-agent
    ```
 
-2. Navigate to a sample folder and follow its README:
+2. Navigate to the sample folder and follow its README:
    ```bash
    cd samples/simple-rag-movies
    ```
@@ -35,40 +39,24 @@ A collection of deployable code samples demonstrating how to build intelligent a
 
 ```
 mongodb-foundry-agent/
-├── README.md                          # This file — sample catalog
+├── README.md                          # This file
 ├── LICENSE
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 ├── .gitignore
+├── .github/
+│   └── workflows/                     # CI, including agent evaluation workflow
+├── apim-mcp-gateway/                  # Expose the REST API as an MCP server via APIM
+├── aigateway-integration/             # Foundry ↔ APIM AI gateway connection
 └── samples/
-    ├── simple-rag-movies/             # Semantic search agent over movies
-    │   ├── README.md                  # Full setup & deployment guide
-    │   ├── src/                       # Source code (Azure Function)
-    │   ├── deploy/                    # Bicep & ARM templates
-    │   ├── docs/                      # Architecture, agent instructions, OpenAPI spec
-    │   ├── scripts/                   # Deployment scripts (Bash & PowerShell)
-    │   └── sample-queries.md          # Example queries to test the agent
-    └── multimodal-product-search/     # Visual product search with images
+    └── simple-rag-movies/             # Semantic search agent over movies
         ├── README.md                  # Full setup & deployment guide
-        ├── src/                       # Embedding function + data loader
+        ├── src/                       # Source code (Container App REST API)
         ├── deploy/                    # Bicep & ARM templates
-        ├── docs/                      # Agent instructions, OpenAPI spec
-        ├── scripts/                   # Deployment scripts (Bash & PowerShell)
+        ├── docs/                      # Architecture, agent instructions, OpenAPI spec
+        ├── evals/                     # Agent evaluation datasets & workflow docs
+        ├── scripts/                   # Deployment & helper scripts
         └── sample-queries.md          # Example queries to test the agent
-    └── voice-customer-support/        # Voice logistics support agent
-        ├── README.md                  # Full setup & deployment guide
-        ├── src/                       # Embedding func, ticket func, voice UI, data loader
-        ├── deploy/                    # Bicep & ARM templates
-        ├── docs/                      # Agent instructions, OpenAPI specs
-        ├── scripts/                   # Deployment scripts (Bash & PowerShell)
-        └── sample-conversations.md    # Example voice conversations
-    └── insurance-claim-agent/         # Multi-agent insurance claim processing
-        ├── README.md                  # Full setup & deployment guide
-        ├── src/                       # Image analysis func, embedding func, data loader
-        ├── deploy/                    # Bicep & ARM templates
-        ├── docs/                      # Two agent instructions, OpenAPI specs
-        ├── scripts/                   # Deployment scripts (Bash & PowerShell)
-        └── sample-scenarios.md        # Example claim scenarios
 ```
 
 ## Contributing
