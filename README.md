@@ -2,6 +2,11 @@
 
 A deployable code sample demonstrating how to build an intelligent agent with **MongoDB Atlas** and **Azure AI Foundry**.
 
+> **Credit:** This repository is based on and adapted from the original
+> [vpriyanshi/mongodb-foundry-agent](https://github.com/vpriyanshi/mongodb-foundry-agent).
+> Thanks to the original authors. This copy extends the sample into a guided Developer Day
+> workshop (Foundry setup → base agent → evaluations → APIM MCP gateway).
+
 ## Sample
 
 | Sample | Description | Key Technologies |
@@ -64,6 +69,12 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+Adapted from the original repository
+[vpriyanshi/mongodb-foundry-agent](https://github.com/vpriyanshi/mongodb-foundry-agent).
+This workshop edition restructures and extends that sample for MongoDB Developer Day.
 
 ## Resources
 
